@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body {
+            background-color: darkslategray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .cal {
+            width: 300px;
+            background-color: aliceblue;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .display {
+            width: 100%;
+            height: 40px;
+            font-size: 20px;
+            padding: 5px;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .icon-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background-color: cornflowerblue;
+            color: white;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .icon:hover {
+            background-color: royalblue;
+        }
+
+        .icon-clear {
+            grid-row: span 2;
+            height: 100px;
+            background-color: darkgoldenrod;
+        }
+
+        .icon-equal {
+            grid-column: span 3;
+            width: 210px;
+            background-color: darkblue;
+        }
+    </style>
+</head>
+
+<body>
+   
+    <div class="cal">
+     <h1>CALCULATOR</h1>
+        <input type="text" class="display" id="display" readonly>
+        <div class="icon-container">
+            <div class="icon icon-clear" onclick="clearDisplay()">C</div>
+            <div class="icon" onclick="appendNumber('7')">7</div>
+            <div class="icon" onclick="appendNumber('8')">8</div>
+            <div class="icon" onclick="appendNumber('9')">9</div>
+            <div class="icon" onclick="setOperation('/')">/</div>
+            <div class="icon" onclick="appendNumber('4')">4</div>
+            <div class="icon" onclick="appendNumber('5')">5</div>
+            <div class="icon" onclick="appendNumber('6')">6</div>
+            <div class="icon" onclick="setOperation('*')">*</div>
+            <div class="icon" onclick="appendNumber('1')">1</div>
+            <div class="icon" onclick="appendNumber('2')">2</div>
+            <div class="icon" onclick="appendNumber('3')">3</div>
+            <div class="icon" onclick="setOperation('-')">-</div>
+            <div class="icon" onclick="appendNumber('0')">0</div>
+            <div class="icon" onclick="appendNumber('.')">.</div>
+            <div class="icon icon-equal" onclick="calculateResult()">=</div>
+            <div class="icon" onclick="setOperation('+')">+</div>
+        </div>
+    </div>
+
+    <script>
+        let currentInput = '';
+        let firstNumber = '';
+        let secondNumber = '';
+        let operation = null;
+
+        function appendNumber(number) {
+            if (operation === null) {
+                firstNumber += number;
+                currentInput = firstNumber;
+            } else {
+                secondNumber += number;
+                currentInput = `${firstNumber} ${operation} ${secondNumber}`;
+            }
+            updateDisplay();
+        }
+
+        function setOperation(op) {
+            if (firstNumber === '') return; 
+            if (secondNumber !== '') calculateResult(); 
+            operation = op;
+            currentInput = `${firstNumber} ${operation}`;
+            updateDisplay();
+        }
+
+        function calculateResult() {
+            const num1 = parseFloat(firstNumber);
+            const num2 = parseFloat(secondNumber);
+            if (isNaN(num1) || isNaN(num2)) return;
+
+            let result;
+            switch (operation) {
+                case '+':
+                    result = num1 + num2;
+                    break;
+                case '-':
+                    result = num1 - num2;
+                    break;
+                case '*':
+                    result = num1 * num2;
+                    break;
+                case '/':
+                    result = num2 !== 0 ? num1 / num2 : 'Error';
+                    break;
+                default:
+                    return;
+            }
+
+            currentInput = result.toString();
+            firstNumber = currentInput;
+            secondNumber = '';
+            operation = null;
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            firstNumber = '';
+            secondNumber = '';
+            operation = null;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('display').value = currentInput;
+        }
+    </script>
+</body>
+
+</html>
